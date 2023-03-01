@@ -46,6 +46,9 @@ jobs:
       
       - name: Push built to remote
         run: |
+          git config --global user.email "nathann.dev@gmail.com"
+          git config --global user.name "Anh Nguyen"
+
           git add -A; git commit -m "commit built files"
           git push
       
