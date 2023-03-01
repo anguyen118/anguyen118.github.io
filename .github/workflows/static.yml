@@ -40,14 +40,21 @@ jobs:
         working-directory: ./vite-portfolio
         run: |
           yarn build
-      
-      - name: Push built to remote
+
+      - name: Check if there are any changes
+        id: verify_diff
+        run: |
+          git diff --quiet . || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit
+        if: steps.verify_diff.outputs.changed == 'true'
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-
-          git add -A; git commit -m "commit built files"
-          git push
+          
+          git add -A
+          git commit -m "commit built changes"
+          git push 
       
   # Single deploy job since we're just deploying
   deploy:
