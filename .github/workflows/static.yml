@@ -44,6 +44,10 @@ jobs:
         run: |
           yarn build
       
+      - name: Push
+        run: |
+          git push
+      
   # Single deploy job since we're just deploying
   deploy:
     needs: build
