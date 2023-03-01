@@ -14,6 +14,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  repository-projects: write
 
 # Allow one concurrent deployment
 concurrency:
@@ -46,8 +47,8 @@ jobs:
       
       - name: Push built to remote
         run: |
-          git config --global user.email "nathann.dev@gmail.com"
-          git config --global user.name "Anh Nguyen"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
 
           git add -A; git commit -m "commit built files"
           git push
