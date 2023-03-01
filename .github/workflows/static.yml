@@ -44,8 +44,9 @@ jobs:
         run: |
           yarn build
       
-      - name: Push
+      - name: Push built to remote
         run: |
+          git add -A; git commit -m "commit built files"
           git push
       
   # Single deploy job since we're just deploying
