@@ -21,8 +21,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  build: 
+    environment: 
+      name: build static files
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Yarn
+        run: |
+          npm i -g yarn
+
+      - name: Install Dependencies
+        run: |
+          yarn install
+
+      - name: Build
+        run: |
+          yarn build
+      
   # Single deploy job since we're just deploying
   deploy:
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -39,7 +60,7 @@ jobs:
         with:
           # Upload entire repository
           path: '.'
-          
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
