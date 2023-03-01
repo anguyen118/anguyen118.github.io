@@ -55,8 +55,6 @@ jobs:
           git add -A
           git commit -m "commit built changes"
           git push 
-        with:
-          branch: ${{ github.ref }}
       
   # Single deploy job since we're just deploying
   deploy:
