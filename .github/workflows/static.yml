@@ -4,7 +4,7 @@ name: Deploy static content to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ['dev', 'debug/*']
+    branches: ['main', 'debug/*']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -20,7 +20,8 @@ concurrency:
 jobs:
   build:
     environment:
-      name: build static files
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,32 +42,6 @@ jobs:
         run: |
           yarn build
 
-      - name: Check if there are any changes
-        id: verify_diff
-        run: |
-          git diff --quiet . || echo "changed=true" >> $GITHUB_OUTPUT
-
-      - name: Commit
-        if: steps.verify_diff.outputs.changed == 'true'
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-
-          git add -A
-          git commit -m "commit built changes"
-          git push
-
-  # Single deploy job since we're just deploying
-  deploy:
-    needs: build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
@@ -74,7 +49,7 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload entire repository
-          path: '.'
+          path: './dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
