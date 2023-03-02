@@ -1,47 +1,29 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import './App.css';
+import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { getEmojiFavicon } from './utils/randomFavicon';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [favicon, setFavicon] = useState(getEmojiFavicon());
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setFavicon(getEmojiFavicon());
+    }, 2000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [favicon]);
 
   return (
-    <div className='App'>
-      <div>
-        <a
-          href='https://vitejs.dev'
-          target='_blank'
-        >
-          <img
-            src='/vite.svg'
-            className='logo'
-            alt='Vite logo'
-          />
-        </a>
-        <a
-          href='https://reactjs.org'
-          target='_blank'
-        >
-          <img
-            src={reactLogo}
-            className='logo react'
-            alt='React logo'
-          />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className='card'>
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className='read-the-docs'>
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <>
+      <Helmet>
+        <link
+          rel='icon'
+          href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${favicon}</text></svg>`}
+        />
+      </Helmet>
+    </>
   );
 }
 
